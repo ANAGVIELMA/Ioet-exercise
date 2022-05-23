@@ -10,10 +10,9 @@ function handleFileSelect(evt) {
         } else if (splitDataText.length == 1) {
             console.log('No hay datos suficientes');
         } else {
-            let fileInput = document.querySelector("#files");
-            fileInput.disabled = true;
-            let employees = new Array();
-            let matchList = new Object;
+            disableInput();
+
+
             let foundStartTime;
             let foundEndTime;
             let searchDay;
@@ -23,10 +22,9 @@ function handleFileSelect(evt) {
             let indexOfFoundDay;
             let tableSectionInner;
 
-            for (let i = 0; i < splitDataText.length; i++) {
-                employees[i] = splitData(splitDataText[i]); //Extraigo Los datos Organizados
-            }
-            let k;
+            let employees = extractEmployes(splitDataText);
+            let matchList = compareEmployees(splitDataText, employees);
+            /*let k;
             let countRow = 0;
             let iTop;
             if (splitDataText.length === 2) {
@@ -36,7 +34,6 @@ function handleFileSelect(evt) {
             }
             for (let i = 0; i < iTop; i++) {
                 matchList.match = 0;
-                /***/ ///////////////////////////////////////////////////// */
                 if (i == splitDataText.length - 1) {
                     k = 0;
                 } else {
@@ -69,7 +66,7 @@ function handleFileSelect(evt) {
                     matchList.match = 0;
                 }
 
-            }
+            }*/
 
         };
         filereader.onerror = () => {
@@ -107,6 +104,68 @@ function createRowItem(content) {
     return div;
 }
 
-function compareEmployees() {
+function disableInput() {
+    let fileInput = document.querySelector("#files");
+    fileInput.disabled = true;
+}
 
+function extractEmployes(splitDataText) {
+    let employees = new Array;
+    console.log(splitDataText.length);
+    for (let i = 0; i < splitDataText.length; i++) {
+        employees[i] = splitData(splitDataText[i]); //Extraigo Los datos Organizados
+    }
+    return employees;
+}
+
+function compareEmployees(splitDataText, employees) {
+    let matchList = new Object;
+    let k;
+    let countRow = 0;
+    let iTop;
+    if (splitDataText.length === 2) {
+        iTop = splitDataText.length - 1;
+    } else {
+        iTop = splitDataText.length;
+    }
+    for (let i = 0; i < iTop; i++) {
+        matchList.match = 0;
+        if (i == splitDataText.length - 1) {
+            k = 0;
+        } else {
+            k = i + 1;
+        }
+        for (let j = 0; j < employees[i].schedule.length; j++) {
+            searchDay = employees[i].day[j];
+            searchStartTime = employees[i].startTime[j];
+            searchEndTime = employees[i].endTime[j];
+            foundDay = employees[k].day.find(element => element == searchDay); //Busco en el Segundo Elemento los del 1ero
+            indexOfFoundDay = employees[k].day.indexOf(foundDay);
+            if (foundDay != undefined) {
+                foundStartTime = employees[k].startTime[indexOfFoundDay]
+                foundEndTime = employees[k].endTime[indexOfFoundDay]
+                if (searchStartTime <= foundEndTime && searchStartTime >= foundStartTime) {
+                    matchList.employee1 = employees[i].name;
+                    matchList.employee2 = employees[k].name;
+                    matchList.match = matchList.match + 1;
+                }
+            }
+        }
+        if (matchList.match != 0) {
+            countRow++;
+            printRow(countRow, matchList);
+        }
+
+    }
+    return matchList;
+}
+
+function printRow(countRow, matchList) {
+    tableSectionInner = document.querySelector("#tableSection>div:nth-child(" + countRow + ")");
+    rowTable = '<div id="rowTable' + countRow + '" class="rowTable">' +
+        '<div class="employee1">' + matchList.employee1 + '</div>' +
+        '<div class="employee2">' + matchList.employee2 + '</div>' +
+        '<div class="employee2">' + matchList.match + '</div></div>';
+    tableSectionInner.insertAdjacentHTML("afterend", rowTable);
+    matchList.match = 0;
 }
