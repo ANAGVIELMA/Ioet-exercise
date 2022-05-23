@@ -1,0 +1,35 @@
+body {
+    font-family: 'Roboto';
+    background-color: gray;
+}
+
+section {
+    padding: 60px;
+    background-color: #fff;
+    width: 80%;
+    margin: auto;
+    margin: 20px;
+}
+
+#tableSection {
+    width: 600px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+#tableSection>div {
+    margin: 0px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+}
+
+#tableSection>div>div {
+    width: 33%;
+}
+
+#tableTitle {
+    font-weight: 900;
+    margin-bottom: 15px !important;
+}
