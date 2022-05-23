@@ -9,9 +9,6 @@
 - Web navigator.
 - txt file with the Data
 
-## Running the tests ⚙️
-- Explain how to run the automated tests for this system
-
 ## Built with 🛠️
 - Visual Studio Code in JavaScript
 - Git
