@@ -11,8 +11,6 @@ function handleFileSelect(evt) {
             console.log('No hay datos suficientes');
         } else {
             disableInput();
-
-
             let foundStartTime;
             let foundEndTime;
             let searchDay;
@@ -21,11 +19,8 @@ function handleFileSelect(evt) {
             let foundDay;
             let indexOfFoundDay;
             let tableSectionInner;
-            console.log("splitDataText: " + splitDataText);
-            let employees = extractEmployees(splitDataText);
-            console.log("employees: " + employees);
+            let employees = extractEmployes(splitDataText);
             let matchList = compareEmployees(splitDataText, employees);
-
         };
         filereader.onerror = () => {
             console.log("Error: ", filereader.error);
@@ -67,7 +62,7 @@ function disableInput() {
     fileInput.disabled = true;
 }
 
-function extractEmployees(splitDataText) {
+function extractEmployes(splitDataText) {
     let employees = new Array;
     for (let i = 0; i < splitDataText.length; i++) {
         employees[i] = splitData(splitDataText[i]); //Extraigo Los datos Organizados
@@ -76,18 +71,16 @@ function extractEmployees(splitDataText) {
 }
 
 function compareEmployees(splitDataText, employees) {
-    console.log("function compareEmployees()");
-    console.log("splitDataText: " + splitDataText);
     let matchList = new Object;
     let k;
     let countRow = 0;
+
     for (let i = 0; i < splitDataText.length - 1; i++) {
-        matchList.match = 0;
-        for (let h = i; h > splitDataText.length - i - 1; h++) {
+        for (let h = i + 1; h < splitDataText.length; h++) {
+
+            matchList.match = 0;
             for (let j = 0; j < employees[i].schedule.length; j++) {
                 searchDay = employees[i].day[j];
-                //console.log(": " + );
-                console.log("searchDay: " + searchDay);
                 searchStartTime = employees[i].startTime[j];
                 searchEndTime = employees[i].endTime[j];
                 foundDay = employees[h].day.find(element => element == searchDay); //Busco en el Segundo Elemento los del 1ero
@@ -102,13 +95,11 @@ function compareEmployees(splitDataText, employees) {
                     }
                 }
             }
+            if (matchList.match != 0) {
+                countRow++;
+                printRow(countRow, matchList);
+            }
         }
-
-        if (matchList.match != 0) {
-            countRow++;
-            printRow(countRow, matchList);
-        }
-
     }
     return matchList;
 }
